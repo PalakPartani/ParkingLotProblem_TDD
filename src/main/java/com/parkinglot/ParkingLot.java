@@ -8,6 +8,8 @@ import java.util.List;
 public class ParkingLot {
     private int capacity;
     List vehicles;
+    AirportSecurity airportSecurity;
+    ParkingLotOwner parkingLotOwner;
 
     public ParkingLot(int capacity) {
         vehicles = new ArrayList();
@@ -29,5 +31,13 @@ public class ParkingLot {
             return true;
         }
         return false;
+    }
+
+    public void registerSecurity(AirportSecurity airportSecurity) {
+        this.airportSecurity = airportSecurity;
+    }
+
+    public void registerOwner(ParkingLotOwner parkingLotOwner) {
+        this.parkingLotOwner = parkingLotOwner;
     }
 }
