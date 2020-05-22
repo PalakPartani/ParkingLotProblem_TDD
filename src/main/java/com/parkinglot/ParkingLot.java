@@ -11,7 +11,7 @@ public class ParkingLot {
     List<ParkingObservers> observersList;
 
     public ParkingLot(int capacity) {
-        vehicles = new ArrayList();
+        vehicles = new ArrayList<>();
         observersList = new ArrayList<>();
         this.capacity = capacity;
     }
