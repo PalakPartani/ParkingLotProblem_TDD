@@ -1,3 +1,9 @@
+/******************************************
+ * purpose:Parking & unparking vehicles in a parking lot
+ * @author name:Palak
+ * @version:1.0
+ * @Date:22-05-2020
+ *******************************************/
 package com.parkinglot;
 
 import com.parkinglot.exception.ParkingLotException;
@@ -16,9 +22,21 @@ public class ParkingLot {
         this.capacity = capacity;
     }
 
+    /**
+     * @param parkingObservers types of observer
+     * @return adding the observers in list
+     * @purpose:register the different observers
+     */
+
     public void register(ParkingObservers parkingObservers) {
         observersList.add(parkingObservers);
     }
+
+    /**
+     * @param vehicle of Object type to be parked
+     * @return converted value
+     * @purpose:parking vehicle
+     */
 
     public void parkVehicle(Object vehicle) {
         if (isVehicleParked(vehicle))
@@ -31,10 +49,20 @@ public class ParkingLot {
         this.vehicles.add(vehicle);
     }
 
+    /**
+     * @param vehicle of type Object
+     * @return boolean value
+     * @purpose:check if vehicle is parked
+     */
     public boolean isVehicleParked(Object vehicle) {
         return this.vehicles.contains(vehicle);
     }
 
+    /**
+     * @param vehicle
+     * @return boolean value
+     * @purpose:unpark the given vehicle else return false
+     */
     public boolean unParkVehicle(Object vehicle) {
         if (this.vehicles.contains(vehicle)) {
             vehicles.remove(vehicle);
