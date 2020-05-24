@@ -147,4 +147,25 @@ public class ParkingLotTest {
         boolean isParked = parkingLot.isVehicleParked(vehicle);
         Assert.assertTrue(isParked);
     }
+    //uc7
+
+    @Test
+    public void givenVehicle_WhenParkedShouldFindTheLocation() {
+        parkingLot.parkVehicle(vehicle);
+        parkingLot.parkVehicle(new Object());
+        int vehicleLocation = parkingLot.findVehicleLocation(vehicle);
+        Assert.assertEquals(vehicleLocation, 0);
+    }
+
+    @Test
+    public void givenVehicle_WhenNotFound_ShouldThrowException() {
+        parkingLot.parkVehicle(vehicle);
+        parkingLot.parkVehicle(new Object());
+        try {
+            parkingLot.parkVehicle(new Object());
+        } catch (ParkingLotException e) {
+            Assert.assertEquals("Sorry! vehicle not found", e.getMessage());
+        }
+
+    }
 }

@@ -7,7 +7,7 @@ public class ParkingLotException extends RuntimeException {
     }
 
     public enum ExceptionType {
-        SIZE_FULL, PARKED;
+        SIZE_FULL, PARKED,NOT_FOUND;
     }
 
     ExceptionType type;

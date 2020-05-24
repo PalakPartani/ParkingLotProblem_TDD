@@ -55,6 +55,9 @@ public class ParkingLot {
         this.vehicles.set(slotNumber, vehicle);
     }
 
+    /**
+     * @return null slots
+     */
     public ArrayList getEmptySlots() {
         ArrayList emptySlots = new ArrayList();
         for (int i = 0; i < this.capacity; i++) {
@@ -86,13 +89,25 @@ public class ParkingLot {
         return false;
     }
 
-    /**+
-     * @purpose:initialize the lot
+    /**
+     * +
+     *
      * @return the null list
+     * @purpose:initialize the lot
      */
     public int initializeParkingLot() {
         this.vehicles = new ArrayList();
         IntStream.range(0, this.capacity).forEach(slots -> vehicles.add(null));
         return vehicles.size();
+    }
+
+    /**
+     * @param vehicle
+     * @return location of parked vehicle
+     */
+    public int findVehicleLocation(Object vehicle) {
+        if (vehicles.contains(vehicle))
+            return vehicles.indexOf(vehicle);
+        throw new ParkingLotException("Sorry! vehicle not found", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 }
