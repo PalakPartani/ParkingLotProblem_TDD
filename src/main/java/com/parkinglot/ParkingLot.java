@@ -8,6 +8,7 @@ package com.parkinglot;
 
 import com.parkinglot.exception.ParkingLotException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -40,7 +41,7 @@ public class ParkingLot {
      * @purpose:parking vehicle
      */
 
-    public void parkVehicle(Object vehicle) {
+    public void parkVehicle(Object vehicle, int... slots) {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("Vehicle already parked !", ParkingLotException.ExceptionType.PARKED);
         if (vehicles.size() == capacity && !vehicles.contains(null)) {
@@ -49,6 +50,11 @@ public class ParkingLot {
             throw new ParkingLotException("Lot full !", ParkingLotException.ExceptionType.SIZE_FULL);
         }
         park(numberOfSlots++, vehicle);
+    }
+
+    public int getTime() {
+        observersList.get(0).setParkingTime(LocalDateTime.now().getMinute());
+        return LocalDateTime.now().getMinute();
     }
 
     public void park(int slotNumber, Object vehicle) {

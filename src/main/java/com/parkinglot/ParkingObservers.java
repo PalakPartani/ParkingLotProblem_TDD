@@ -10,4 +10,7 @@ public interface ParkingObservers {
     void setCapacityFull();
 
     boolean isCapacityFull();
+
+    void setParkingTime(int minute);
+    int getParkingTime();
 }

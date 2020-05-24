@@ -166,6 +166,14 @@ public class ParkingLotTest {
         } catch (ParkingLotException e) {
             Assert.assertEquals("Sorry! vehicle not found", e.getMessage());
         }
+    }
 
+    @Test
+    public void givenVehicleParked_WhenTimeIsSet_ShouldReturnParkingTime() {
+        ParkingLotOwner owner = new ParkingLotOwner();
+        parkingLot.register(owner);
+        parkingLot.parkVehicle(vehicle);
+        int parkMinute = parkingLot.getTime();
+        Assert.assertEquals(owner.getParkingTime(), parkMinute);
     }
 }
