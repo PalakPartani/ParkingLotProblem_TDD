@@ -10,16 +10,18 @@ import com.parkinglot.exception.ParkingLotException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class ParkingLot {
     private int capacity;
+    int numberOfSlots;
     List vehicles;
     List<ParkingObservers> observersList;
 
     public ParkingLot(int capacity) {
-        vehicles = new ArrayList<>();
         observersList = new ArrayList<>();
         this.capacity = capacity;
+        initializeParkingLot();
     }
 
     /**
@@ -41,12 +43,25 @@ public class ParkingLot {
     public void parkVehicle(Object vehicle) {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("Vehicle already parked !", ParkingLotException.ExceptionType.PARKED);
-        if (vehicles.size() == capacity) {
+        if (vehicles.size() == capacity && !vehicles.contains(null)) {
             for (ParkingObservers observers : observersList)
                 observers.setCapacityFull();
             throw new ParkingLotException("Lot full !", ParkingLotException.ExceptionType.SIZE_FULL);
         }
-        this.vehicles.add(vehicle);
+        park(numberOfSlots++, vehicle);
+    }
+
+    public void park(int slotNumber, Object vehicle) {
+        this.vehicles.set(slotNumber, vehicle);
+    }
+
+    public ArrayList getEmptySlots() {
+        ArrayList emptySlots = new ArrayList();
+        for (int i = 0; i < this.capacity; i++) {
+            if (this.vehicles.get(i) == null)
+                emptySlots.add(i);
+        }
+        return emptySlots;
     }
 
     /**
@@ -65,9 +80,19 @@ public class ParkingLot {
      */
     public boolean unParkVehicle(Object vehicle) {
         if (this.vehicles.contains(vehicle)) {
-            vehicles.remove(vehicle);
+            this.vehicles.set(this.vehicles.indexOf(vehicle), null);
             return true;
         }
         return false;
+    }
+
+    /**+
+     * @purpose:initialize the lot
+     * @return the null list
+     */
+    public int initializeParkingLot() {
+        this.vehicles = new ArrayList();
+        IntStream.range(0, this.capacity).forEach(slots -> vehicles.add(null));
+        return vehicles.size();
     }
 }
