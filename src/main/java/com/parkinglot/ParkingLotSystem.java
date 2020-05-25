@@ -5,26 +5,24 @@
  * @Date:22-05-2020
  *******************************************/
 package com.parkinglot;
+//parkinglot
 
+import com.parkinglot.enums.DriverType;
+import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exception.ParkingLotException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class ParkingLot {
+public class ParkingLotSystem {
     private int capacity;
     List vehicles;
     List<ParkingObservers> observersList;
 
-
-    public enum DriverType {
-        NORMAL, HANDICAP;
-    }
-
-    public ParkingLot(int capacity) {
+    public ParkingLotSystem(int capacity) {
         observersList = new ArrayList<>();
         this.capacity = capacity;
         initializeParkingLot();
@@ -46,7 +44,8 @@ public class ParkingLot {
      */
     public int initializeParkingLot() {
         this.vehicles = new ArrayList();
-        IntStream.range(0, this.capacity).forEach(slots -> vehicles.add(null));
+        IntStream.range(0, this.capacity)
+                .forEach(slots -> vehicles.add(null));
         return vehicles.size();
     }
 
@@ -57,7 +56,7 @@ public class ParkingLot {
      * @purpose:parking vehicle
      */
 
-    public void parkVehicle(Object vehicle, DriverType driverType, int... slots) {
+    public void parkVehicle(Object vehicle, DriverType driverType) {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("Vehicle already parked !", ParkingLotException.ExceptionType.PARKED);
         if (vehicles.size() == capacity && !vehicles.contains(null)) {
@@ -65,25 +64,16 @@ public class ParkingLot {
                 observers.setCapacityFull();
             throw new ParkingLotException("Lot full !", ParkingLotException.ExceptionType.SIZE_FULL);
         }
-        getParkingLocation(vehicle, driverType, slots);
+        int emptyParkingSlot = getEmptyParkingSlotBasedOnDriverType(driverType);
+        park(emptyParkingSlot, vehicle);
     }
 
-    public void getParkingLocation(Object vehicle, DriverType driverType, int... slots) {
-        if (slots.length == 0) {
-            int autoParkingLocation = (int) getListOnDriverBasis(driverType).get(0);
-            this.vehicles.set(autoParkingLocation, vehicle);
-            return;
-        }
+    public Integer getEmptyParkingSlotBasedOnDriverType(DriverType driverType) {
+        return getEmptySlots().stream()
+                .sorted(driverType.order)
+                .collect(Collectors.toList()).get(0);
     }
 
-    public List getListOnDriverBasis(DriverType driverType) {
-        ArrayList emptyParkingSlotList = getEmptySlots();
-        if (DriverType.HANDICAP.equals(driverType))
-            Collections.sort(emptyParkingSlotList);
-        else if (DriverType.NORMAL.equals(driverType))
-            Collections.sort(emptyParkingSlotList, Collections.reverseOrder());
-        return emptyParkingSlotList;
-    }
 
     /**
      * @return null slots

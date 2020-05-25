@@ -1,5 +1,7 @@
 package com.parkinglot;
 
+import com.parkinglot.enums.DriverType;
+import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exception.ParkingLotException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,7 +14,7 @@ import org.mockito.junit.MockitoRule;
 import static org.mockito.Mockito.when;
 
 public class MockitoTest {
-    ParkingLot parkingLot;
+    ParkingLotSystem parkingLot;
     Object vehicle;
 
     @Mock
@@ -27,13 +29,13 @@ public class MockitoTest {
 
     @Before
     public void setUp() throws Exception {
-        parkingLot = new ParkingLot(2);
+        parkingLot = new ParkingLotSystem(2);
     }
 
     @Test
     public void givenCapacityFull_ShouldThrowException() {
 
-        parkingLot.parkVehicle(vehicle, ParkingLot.DriverType.NORMAL);
+        parkingLot.parkVehicle(vehicle, DriverType.NORMAL);
         parkingLot.register(airportSecurity);
         when(airportSecurity.isCapacityFull()).thenThrow(new ParkingLotException("Lot full !", ParkingLotException.ExceptionType.SIZE_FULL));
     }
