@@ -29,7 +29,7 @@ public class ParkingAttendant {
         List<ParkingLot> parkingLotList = this.parkingLotList;
         Collections.sort(parkingLotList, Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()));
         ParkingLot lot = parkingLotList.get(0);
-        lot.parkVehicle(vehicle);
+        lot.parkVehicle(vehicle, ParkingLot.DriverType.NORMAL);
     }
 
     public boolean isVehicleParked(Object vehicle) {

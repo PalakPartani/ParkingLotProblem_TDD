@@ -33,7 +33,7 @@ public class MockitoTest {
     @Test
     public void givenCapacityFull_ShouldThrowException() {
 
-        parkingLot.parkVehicle(vehicle);
+        parkingLot.parkVehicle(vehicle, ParkingLot.DriverType.NORMAL);
         parkingLot.register(airportSecurity);
         when(airportSecurity.isCapacityFull()).thenThrow(new ParkingLotException("Lot full !", ParkingLotException.ExceptionType.SIZE_FULL));
     }
