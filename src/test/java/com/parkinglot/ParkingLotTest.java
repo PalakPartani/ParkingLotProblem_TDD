@@ -113,7 +113,6 @@ public class ParkingLotTest {
 
     @Test
     public void givenParkingLotCapacity_WhenInitialize_ShouldReturnParkingCapacity() {
-        // parkingLot.setCapacity(2);
         int parkingLotCapacity = parkingLot.initializeParkingLot();
         Assert.assertEquals(3, parkingLotCapacity);
     }
@@ -168,6 +167,7 @@ public class ParkingLotTest {
         }
     }
 
+    //uc8
     @Test
     public void givenVehicleParked_WhenTimeIsSet_ShouldReturnParkingTime() {
         ParkingLotOwner owner = new ParkingLotOwner();
@@ -175,5 +175,71 @@ public class ParkingLotTest {
         parkingLot.parkVehicle(vehicle);
         int parkMinute = parkingLot.getTime();
         Assert.assertEquals(owner.getParkingTime(), parkMinute);
+    }
+
+    //uc9
+    @Test
+    public void givenMultipleLots_WhenAdded_ShouldReturnTrue() {
+        ParkingAttendant parkingAttendant = new ParkingAttendant();
+        ParkingLot parkingLot1 = new ParkingLot(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
+        boolean lotAdded = parkingAttendant.isLotAdded(parkingLot1);
+        boolean lotAdded1 = parkingAttendant.isLotAdded(parkingLot);
+        Assert.assertTrue(lotAdded && lotAdded1);
+    }
+
+    @Test
+    public void givenVehicleToPark_WhenEvenlyParked_ShouldReturnTrue() {
+        ParkingAttendant parkingAttendant = new ParkingAttendant();
+        ParkingLot parkingLot1 = new ParkingLot(3);
+
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
+
+        Object vehicle2 = new Object();
+        Object vehicle3 = new Object();
+        Object vehicle4 = new Object();
+
+        parkingAttendant.parkEvenly(vehicle);
+        parkingAttendant.parkEvenly(vehicle2);
+        parkingAttendant.parkEvenly(vehicle3);
+        parkingAttendant.parkEvenly(vehicle4);
+
+        boolean vehicleParked = parkingAttendant.isVehicleParked(vehicle);
+        boolean vehicleParked1 = parkingAttendant.isVehicleParked(vehicle2);
+        boolean vehicleParked2 = parkingAttendant.isVehicleParked(vehicle3);
+        boolean vehicleParked3 = parkingAttendant.isVehicleParked(vehicle4);
+        //  Assert.assertTrue(vehicleParked && vehicleParked3 && vehicleParked1 && vehicleParked2);
+        Assert.assertTrue(vehicleParked && vehicleParked1 && vehicleParked2 && vehicleParked3);
+    }
+
+    @Test
+    public void givenVehicleToPark_WhenEvenlyParked_ShouldReturnEqualEmptySlots() {
+        ParkingAttendant parkingAttendant = new ParkingAttendant();
+        ParkingLot parkingLot1 = new ParkingLot(3);
+
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
+
+        Object vehicle2 = new Object();
+        Object vehicle3 = new Object();
+        Object vehicle4 = new Object();
+
+        parkingAttendant.parkEvenly(vehicle);
+        parkingAttendant.parkEvenly(vehicle2);
+        parkingAttendant.parkEvenly(vehicle3);
+        parkingAttendant.parkEvenly(vehicle4);
+
+        Assert.assertEquals(parkingLot.getEmptySlots().size(), 1);
+        Assert.assertEquals(parkingLot1.getEmptySlots().size(), 1);
     }
 }

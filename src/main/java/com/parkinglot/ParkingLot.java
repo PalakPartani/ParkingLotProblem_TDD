@@ -19,6 +19,7 @@ public class ParkingLot {
     List vehicles;
     List<ParkingObservers> observersList;
 
+
     public ParkingLot(int capacity) {
         observersList = new ArrayList<>();
         this.capacity = capacity;
@@ -41,7 +42,7 @@ public class ParkingLot {
      * @purpose:parking vehicle
      */
 
-    public void parkVehicle(Object vehicle, int... slots) {
+    public void parkVehicle(Object vehicle) {
         if (isVehicleParked(vehicle))
             throw new ParkingLotException("Vehicle already parked !", ParkingLotException.ExceptionType.PARKED);
         if (vehicles.size() == capacity && !vehicles.contains(null)) {
@@ -70,6 +71,7 @@ public class ParkingLot {
             if (this.vehicles.get(i) == null)
                 emptySlots.add(i);
         }
+        System.out.println(emptySlots.size());
         return emptySlots;
     }
 
@@ -96,8 +98,6 @@ public class ParkingLot {
     }
 
     /**
-     * +
-     *
      * @return the null list
      * @purpose:initialize the lot
      */
