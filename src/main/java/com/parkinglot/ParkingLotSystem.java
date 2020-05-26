@@ -1,131 +1,93 @@
-/******************************************
- * purpose:Parking & unparking vehicles in a parking lot
- * @author name:Palak
- * @version:1.0
- * @Date:22-05-2020
- *******************************************/
 package com.parkinglot;
-//parkinglot
 
 import com.parkinglot.enums.DriverType;
-import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exception.ParkingLotException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
-    private int capacity;
-    List vehicles;
-    List<ParkingObservers> observersList;
+    List<ParkingLots> parkingLotList;
+    ParkingLots parkingLot;
 
-    public ParkingLotSystem(int capacity) {
-        observersList = new ArrayList<>();
-        this.capacity = capacity;
-        initializeParkingLot();
+    public enum VehicleType {
+        LARGE, SMALL;
     }
 
-    /**
-     * @param parkingObservers types of observer
-     * @return adding the observers in list
-     * @purpose:register the different observers
-     */
-
-    public void register(ParkingObservers parkingObservers) {
-        observersList.add(parkingObservers);
+    public ParkingLotSystem() {
+        parkingLotList = new ArrayList<>();
+        parkingLot = new ParkingLots(3);
     }
 
-    /**
-     * @return the null list
-     * @purpose:initialize the lot
-     */
-    public int initializeParkingLot() {
-        this.vehicles = new ArrayList();
-        IntStream.range(0, this.capacity)
-                .forEach(slots -> vehicles.add(null));
-        return vehicles.size();
+    public void addMultipleLots(ParkingLots parkingLot) {
+        this.parkingLotList.add(parkingLot);
     }
 
-    /**
-     * @param vehicle of Object type to be parked
-     * @param
-     * @return converted value
-     * @purpose:parking vehicle
-     */
-
-    public void parkVehicle(Object vehicle, DriverType driverType) {
-        if (isVehicleParked(vehicle))
-            throw new ParkingLotException("Vehicle already parked !", ParkingLotException.ExceptionType.PARKED);
-        if (vehicles.size() == capacity && !vehicles.contains(null)) {
-            for (ParkingObservers observers : observersList)
-                observers.setCapacityFull();
-            throw new ParkingLotException("Lot full !", ParkingLotException.ExceptionType.SIZE_FULL);
-        }
-        int emptyParkingSlot = getEmptyParkingSlotBasedOnDriverType(driverType);
-        park(emptyParkingSlot, vehicle);
+    public boolean isLotAdded(ParkingLots parkingLot) {
+        return this.parkingLotList.contains(parkingLot);
     }
 
-    public Integer getEmptyParkingSlotBasedOnDriverType(DriverType driverType) {
-        return getEmptySlots().stream()
-                .sorted(driverType.order)
+    public boolean park(Vehicle vehicle, DriverType driverType) {
+        ParkingLots lot = getLotWithMoreEmptySlots();
+        return lot.parkVehicle(vehicle, driverType);
+    }
+
+    public ParkingLots getLotWithMoreEmptySlots() {
+        ParkingLots parkingLots;
+        /*try {*/
+        parkingLots = parkingLotList.stream()
+                .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
+                .filter(list -> list.getEmptySlots().size() != 0)
+                .findFirst()
+                .orElseThrow(() -> new ParkingLotException("ParkingLot Full", ParkingLotException.ExceptionType.SIZE_FULL));
+       /* } catch (ParkingLotException e) {
+            parkingLots = parkingLotList.get(0);
+        }*/
+        return parkingLots;
+    }
+
+    public boolean isVehicleParked(Vehicle vehicle) {
+        return parkingLotList.stream()
+                .filter(lots -> lots.isVehicleParked(vehicle))
+                .map(slot -> true)
                 .collect(Collectors.toList()).get(0);
     }
 
+    public int getVehicleByLocation(Vehicle vehicle) {
+        for (ParkingLots parkingLots : this.parkingLotList)
+            if (parkingLots.isVehicleParked(vehicle))
+                return parkingLots.getVehicleLocationOnSlot(vehicle);
+        throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
 
-    /**
-     * @return null slots
-     */
-    public ArrayList<Integer> getEmptySlots() {
-        ArrayList emptySlots = new ArrayList();
-        for (int i = 0; i < this.capacity; i++) {
-            if (this.vehicles.get(i) == null)
-                emptySlots.add(i);
+    public ArrayList<Integer> getVehicleByColor(String color) {
+        for (ParkingLots lot : parkingLotList)
+            return lot.getCarByColorName(color);
+        throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
+    public boolean unPark(Vehicle vehicle) {
+        for (ParkingLots parkingLots : this.parkingLotList) {
+           // if (parkingLots.unParkVehicle(vehicle))
+                return parkingLots.unParkVehicle(vehicle);
         }
-        System.out.println(emptySlots.size());
-        return emptySlots;
+
+        throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 
-    public int getTime() {
-        observersList.get(0).setParkingTime(LocalDateTime.now().getMinute());
-        return LocalDateTime.now().getMinute();
-    }
-
-    public void park(int slotNumber, Object vehicle) {
-        this.vehicles.set(slotNumber, vehicle);
-    }
-
-    /**
-     * @param vehicle of type Object
-     * @return boolean value
-     * @purpose:check if vehicle is parked
-     */
-    public boolean isVehicleParked(Object vehicle) {
-        return this.vehicles.contains(vehicle);
-    }
-
-    /**
-     * @param vehicle
-     * @return boolean value
-     * @purpose:unpark the given vehicle else return false
-     */
-    public boolean unParkVehicle(Object vehicle) {
-        if (this.vehicles.contains(vehicle)) {
-            this.vehicles.set(this.vehicles.indexOf(vehicle), null);
-            return true;
+    public void parkAccToVehicle(Vehicle vehicle, DriverType driverType, VehicleType vehicleTypeTypes) {
+        if (vehicleTypeTypes.equals(VehicleType.LARGE)) {
+            List<ParkingLots> parkingLotList = this.parkingLotList;
+            Collections.sort(parkingLotList, Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()));
+            ParkingLots lot = parkingLotList.get(0);
+            lot.parkVehicle(vehicle, driverType);
+        } else {
+            ParkingLots lot = parkingLotList.get(0);
+            lot.parkVehicle(vehicle, driverType);
         }
-        return false;
-    }
-
-    /**
-     * @param vehicle
-     * @return location of parked vehicle
-     */
-    public int findVehicleLocation(Object vehicle) {
-        if (vehicles.contains(vehicle))
-            return vehicles.indexOf(vehicle);
-        throw new ParkingLotException("Sorry! vehicle not found", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 }
+

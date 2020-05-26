@@ -1,7 +1,7 @@
-package com.parkinglot;
+package com.parkinglot.unittesting;
 
+import com.parkinglot.*;
 import com.parkinglot.enums.DriverType;
-import com.parkinglot.enums.VehicleType;
 import com.parkinglot.exception.ParkingLotException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,8 +14,8 @@ import org.mockito.junit.MockitoRule;
 import static org.mockito.Mockito.when;
 
 public class MockitoTest {
-    ParkingLotSystem parkingLot;
-    Object vehicle;
+    ParkingLots parkingLot;
+    Vehicle vehicle;
 
     @Mock
     AirportSecurity airportSecurity;
@@ -29,7 +29,7 @@ public class MockitoTest {
 
     @Before
     public void setUp() throws Exception {
-        parkingLot = new ParkingLotSystem(2);
+        parkingLot = new ParkingLots(2);
     }
 
     @Test
