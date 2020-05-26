@@ -13,6 +13,12 @@ public class ParkingLotSystem {
     List<ParkingLots> parkingLotList;
     ParkingLots parkingLot;
 
+    public ArrayList<String> getVehicleByMultipleValue(String color, String carName) {
+        for (ParkingLots lot : parkingLotList)
+            return lot.getMultipleFields(color, carName);
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
     public enum VehicleType {
         LARGE, SMALL;
     }
@@ -42,7 +48,7 @@ public class ParkingLotSystem {
                 .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
                 .filter(list -> list.getEmptySlots().size() != 0)
                 .findFirst()
-                .orElseThrow(() -> new ParkingLotException("ParkingLot Full", ParkingLotException.ExceptionType.SIZE_FULL));
+                .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
        /* } catch (ParkingLotException e) {
             parkingLots = parkingLotList.get(0);
         }*/
@@ -71,8 +77,8 @@ public class ParkingLotSystem {
 
     public boolean unPark(Vehicle vehicle) {
         for (ParkingLots parkingLots : this.parkingLotList) {
-           // if (parkingLots.unParkVehicle(vehicle))
-                return parkingLots.unParkVehicle(vehicle);
+            // if (parkingLots.unParkVehicle(vehicle))
+            return parkingLots.unParkVehicle(vehicle);
         }
 
         throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);

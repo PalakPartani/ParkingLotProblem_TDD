@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 public class ParkingLotTest {
 
     ParkingLots parkingLot;
@@ -297,7 +299,7 @@ public class ParkingLotTest {
 
     //uc12
     @Test
-    public void givenVehicleColour_WhenFindVehicleAccordinglyColour_ShouldReturnVehicleSlotNumber() {
+    public void givenVehicleColor_WhenFindAccordinglyColor_ShouldReturnCorrectVehicleSlotNumber() {
 
         Vehicle vehicle2 = new Vehicle("White");
         Vehicle vehicle3 = new Vehicle("White");
@@ -310,7 +312,28 @@ public class ParkingLotTest {
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
         parkingAttendant.park(vehicle, DriverType.NORMAL);
 
-        ArrayList<Integer> vehicleByColor = parkingAttendant.getVehicleByColor("White");
-        Assert.assertEquals(expectedVehicles, vehicleByColor);
+        ArrayList<Integer> filteredVehicleDetailsList = parkingAttendant.getVehicleByColor("White");
+        Assert.assertEquals(expectedVehicles, filteredVehicleDetailsList);
+    }
+
+    //uc13
+    @Test
+    public void givenVehicleDetails_WhenFindingVehicleAccordinglyModelNumberAndColor_ShouldReturnCorrectVehicle() {
+
+        ArrayList<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add(1 + " " + "MH-1509");
+        Vehicle vehicle1 = new Vehicle("black", "MH-1618", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-1218", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-1509", "toyota");
+        Vehicle vehicle4 = new Vehicle("white", "MH-0510", "BMW");
+
+        parkingAttendant.park(vehicle1, DriverType.NORMAL);
+        parkingAttendant.park(vehicle2, DriverType.NORMAL);
+        parkingAttendant.park(vehicle3, DriverType.NORMAL);
+        parkingAttendant.park(vehicle4, DriverType.NORMAL);
+        parkingAttendant.park(vehicle, DriverType.NORMAL);
+
+        ArrayList<String> filteredVehicleDetailsList = parkingAttendant.getVehicleByMultipleValue("blue", "toyota");
+        assertEquals(expectedVehicles, filteredVehicleDetailsList);
     }
 }

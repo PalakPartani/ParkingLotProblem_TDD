@@ -139,4 +139,15 @@ public class ParkingLots {
                 .forEach(checklist::add);
         return checklist;
     }
+
+    public ArrayList<String> getMultipleFields(String color, String modelName) {
+        ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), color))
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getModelName(), modelName))
+                .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).vehicle.getNumberPlate()))
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;
+    }
 }
