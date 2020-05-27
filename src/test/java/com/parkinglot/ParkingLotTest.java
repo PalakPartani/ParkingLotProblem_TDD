@@ -206,15 +206,6 @@ public class ParkingLotTest {
 
     @Test
     public void givenVehicleToPark_WhenEvenlyParked_ShouldReturnTrue() {
-        ParkingLotSystem parkingAttendant = new ParkingLotSystem();
-        ParkingLots parkingLot1 = new ParkingLots(3);
-
-        parkingLot.initializeParkingLot();
-        parkingLot1.initializeParkingLot();
-
-        parkingAttendant.addMultipleLots(parkingLot);
-        parkingAttendant.addMultipleLots(parkingLot1);
-
         Vehicle vehicle2 = new Vehicle();
         Vehicle vehicle3 = new Vehicle();
         Vehicle vehicle4 = new Vehicle();
@@ -261,7 +252,6 @@ public class ParkingLotTest {
         Assert.assertEquals(parkingLot1.getEmptySlots().size(), 1);
     }
 
-
     //uc10
     @Test
     public void givenVehicleToPark_WhenDriverIsHandicap_ShouldParkVehicleAtNearestSpot() {
@@ -295,26 +285,6 @@ public class ParkingLotTest {
 
         int emptyParkingSlots = parkingLot.getEmptySlots().get(0);
         Assert.assertSame(expectedSlots, emptyParkingSlots);
-    }
-
-    @Test
-    public void givenVehicles_WhenVehicleNotParkedAccordinglyType_ShouldReturnException() {
-
-        Vehicle vehicle2 = new Vehicle();
-        Vehicle vehicle3 = new Vehicle();
-        Vehicle vehicle4 = new Vehicle();
-
-        try {
-            parkingAttendant.parkAccToVehicle(vehicle, DriverType.NORMAL, ParkingLotSystem.VehicleType.LARGE);
-            parkingAttendant.parkAccToVehicle(vehicle2, DriverType.NORMAL, ParkingLotSystem.VehicleType.SMALL);
-            parkingAttendant.parkAccToVehicle(vehicle3, DriverType.NORMAL, ParkingLotSystem.VehicleType.LARGE);
-            parkingAttendant.parkAccToVehicle(vehicle4, DriverType.NORMAL, ParkingLotSystem.VehicleType.SMALL);
-
-            parkingLot.getEmptySlots().size();
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Vehicle not found !", e.getMessage());
-
-        }
     }
 
     //uc12
@@ -355,7 +325,6 @@ public class ParkingLotTest {
             Assert.assertEquals("Vehicle not found !", e.getMessage());
         }
     }
-
 
     //uc13
     @Test
@@ -434,5 +403,27 @@ public class ParkingLotTest {
         } catch (ParkingLotException e) {
             Assert.assertEquals("Vehicle not found !", e.getMessage());
         }
+    }
+
+    //UC15
+    @Test
+    public void givenVehiclesParked_WhenFindVehicleParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
+
+        ArrayList<Integer> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add(1);
+        expectedVehicles.add(2);
+        expectedVehicles.add(3);
+        expectedVehicles.add(4);
+        Vehicle vehicle1 = new Vehicle("black", "MH-1218", "benz");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-1216", "BMW");
+        Vehicle vehicle3 = new Vehicle("white", "MH-1618", "toyota");
+        Vehicle vehicle4 = new Vehicle("white", "MH-1618", "toyota");
+        parkingAttendant.park(vehicle1, DriverType.NORMAL);
+        parkingAttendant.park(vehicle2, DriverType.NORMAL);
+        parkingAttendant.park(vehicle3, DriverType.NORMAL);
+        parkingAttendant.park(vehicle4, DriverType.NORMAL);
+
+        int filteredVehicleDetailsList = parkingAttendant.getVehicleParkedInLotsInLast30Minutes().size();
+        assertEquals(expectedVehicles.size(), filteredVehicleDetailsList);
     }
 }

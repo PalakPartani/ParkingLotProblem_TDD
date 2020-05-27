@@ -25,6 +25,18 @@ public class ParkingLotSystem {
         throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 
+    public ArrayList<Integer> getVehicleParkedInLotsInLast30Minutes() {
+        ArrayList collect = new ArrayList();
+        for (ParkingLots lot : this.parkingLotList) {
+            if (parkingLotList.contains(lot)) {
+                parkingLot.getVehicleParkedInLast30Mins();
+            }
+            collect.add(parkingLot.getVehicleParkedInLast30Mins());
+            return collect;
+        }
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
     public enum VehicleType {
         LARGE, SMALL;
     }
@@ -49,16 +61,17 @@ public class ParkingLotSystem {
 
     public ParkingLots getLotWithMoreEmptySlots() {
         ParkingLots parkingLots;
-        /*try {*/
-        parkingLots = parkingLotList.stream()
-                .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
-                .filter(list -> list.getEmptySlots().size() != 0)
-                .findFirst()
-                .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
-       /* } catch (ParkingLotException e) {
+        try {
+            parkingLots = parkingLotList.stream()
+                    .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
+                    .filter(list -> list.getEmptySlots().size() != 0)
+                    .findFirst()
+                    .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
+        } catch (ParkingLotException e) {
             parkingLots = parkingLotList.get(0);
-        }*/
+        }
         return parkingLots;
+
     }
 
     public boolean isVehicleParked(Vehicle vehicle) {
@@ -83,7 +96,6 @@ public class ParkingLotSystem {
 
     public boolean unPark(Vehicle vehicle) {
         for (ParkingLots parkingLots : this.parkingLotList) {
-            // if (parkingLots.unParkVehicle(vehicle))
             return parkingLots.unParkVehicle(vehicle);
         }
 
@@ -102,4 +114,3 @@ public class ParkingLotSystem {
         }
     }
 }
-

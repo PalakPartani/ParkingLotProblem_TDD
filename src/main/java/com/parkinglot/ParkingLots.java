@@ -13,11 +13,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ParkingLots {
-    private int capacity;
+    public int capacity;
     private ParkingSlot parkingSlot;
     List<ParkingObservers> observersList;
     public List<ParkingSlot> vehiclesList;
@@ -158,11 +159,18 @@ public class ParkingLots {
                 .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
                 .forEach(checklist::add);
         return checklist;
-        /*ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
+
+    }
+
+    public ArrayList<Integer> getVehicleParkedInLast30Mins() {
+
+        long toMinutes = LocalDateTime.now().getMinute();
+        ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
+                .filter(slot -> toMinutes - vehiclesList.get(slot).parkedTime <= 30)
                 .forEach(filteredVehicleDetailsList::add);
-        return filteredVehicleDetailsList;*/
+        return filteredVehicleDetailsList;
+
     }
 }

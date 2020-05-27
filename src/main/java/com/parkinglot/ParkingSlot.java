@@ -1,10 +1,15 @@
 package com.parkinglot;
 
+import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
+
 public class ParkingSlot {
     public Vehicle vehicle;
+    public int parkedTime;
 
     public ParkingSlot(Vehicle vehicle) {
         this.vehicle = vehicle;
+        this.parkedTime= LocalDateTime.now().getMinute();
     }
 
     @Override
