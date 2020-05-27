@@ -1,11 +1,9 @@
 package com.parkinglot;
 
-import java.util.Objects;
-
 public class Vehicle {
     private String color;
     private String numberPlate;
-    private String modelName;
+    private String carName;
 
     public Vehicle() {
     }
@@ -14,10 +12,10 @@ public class Vehicle {
         this.color = color;
     }
 
-    public Vehicle(String color, String numberPlate, String modelName) {
+    public Vehicle(String color, String numberPlate, String carName) {
         this.color = color;
         this.numberPlate = numberPlate;
-        this.modelName = modelName;
+        this.carName = carName;
     }
 
     public String getColor() {
@@ -28,7 +26,7 @@ public class Vehicle {
         return numberPlate;
     }
 
-    public String getModelName() {
-        return modelName;
+    public String getCarName() {
+        return carName;
     }
 }

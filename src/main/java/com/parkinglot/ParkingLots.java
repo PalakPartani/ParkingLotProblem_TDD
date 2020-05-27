@@ -140,14 +140,29 @@ public class ParkingLots {
         return checklist;
     }
 
-    public ArrayList<String> getMultipleFields(String color, String modelName) {
+    public ArrayList<String> getMultipleFields(String color, String carName) {
         ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), color))
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getModelName(), modelName))
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
                 .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).vehicle.getNumberPlate()))
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
+    }
+
+    public ArrayList<Integer> getVehicleByCarName(String carName) {
+        ArrayList<Integer> checklist = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
+                .forEach(checklist::add);
+        return checklist;
+        /*ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
+        IntStream.range(0, vehiclesList.size())
+                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
+                .forEach(filteredVehicleDetailsList::add);
+        return filteredVehicleDetailsList;*/
     }
 }

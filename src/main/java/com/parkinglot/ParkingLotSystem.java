@@ -19,6 +19,12 @@ public class ParkingLotSystem {
         throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 
+    public ArrayList<Integer> findVehicleByCarName(String carName) {
+        for (ParkingLots lot : parkingLotList)
+            return lot.getVehicleByCarName(carName);
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
     public enum VehicleType {
         LARGE, SMALL;
     }
