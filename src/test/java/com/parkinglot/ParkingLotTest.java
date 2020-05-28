@@ -25,9 +25,7 @@ public class ParkingLotTest {
         parkingAttendant = new ParkingLotSystem();
         parkingLot1 = new ParkingLots(3);
         parkingLot.initializeParkingLot();
-        parkingLot1.initializeParkingLot();
         parkingAttendant.addMultipleLots(parkingLot);
-        parkingAttendant.addMultipleLots(parkingLot1);
     }
 
     //UC1
@@ -145,13 +143,15 @@ public class ParkingLotTest {
 
     @Test
     public void givenVehiclesParkedAndUnParked_ShouldReturnAvailableEmptySlots() {
+
         List expectedSlotList = new ArrayList();
+        Vehicle v = new Vehicle();
         expectedSlotList.add(0);
         expectedSlotList.add(1);
         expectedSlotList.add(2);
-        parkingAttendant.park(vehicle, DriverType.NORMAL);
-        parkingAttendant.park(new Vehicle(), DriverType.NORMAL);
-        parkingAttendant.unPark(vehicle);
+        parkingAttendant.park(v, DriverType.NORMAL);
+
+        parkingAttendant.unPark(v);
         ArrayList<Integer> emptySlotList = parkingLot.getEmptySlots();
         Assert.assertEquals(expectedSlotList, emptySlotList);
     }
@@ -198,7 +198,12 @@ public class ParkingLotTest {
     //uc9
     @Test
     public void givenMultipleLots_WhenAdded_ShouldReturnTrue() {
-
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         boolean lotAdded = parkingAttendant.isLotAdded(parkingLot1);
         boolean lotAdded1 = parkingAttendant.isLotAdded(parkingLot);
         Assert.assertTrue(lotAdded && lotAdded1);
@@ -206,6 +211,12 @@ public class ParkingLotTest {
 
     @Test
     public void givenVehicleToPark_WhenEvenlyParked_ShouldReturnTrue() {
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         Vehicle vehicle2 = new Vehicle();
         Vehicle vehicle3 = new Vehicle();
         Vehicle vehicle4 = new Vehicle();
@@ -224,7 +235,12 @@ public class ParkingLotTest {
 
     @Test
     public void givenVehicleToPark_WhenEvenlyParked_ShouldReturnEqualEmptySlots() {
-
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         Vehicle vehicle2 = new Vehicle();
         Vehicle vehicle3 = new Vehicle();
         Vehicle vehicle4 = new Vehicle();
@@ -239,7 +255,12 @@ public class ParkingLotTest {
 
     @Test
     public void givenVehicleToPark_WhenEvenlyParked_ShouldReturnEqualEmptySlotsOfAnotherList() {
-
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         Vehicle vehicle2 = new Vehicle();
         Vehicle vehicle3 = new Vehicle();
         Vehicle vehicle4 = new Vehicle();
@@ -257,13 +278,14 @@ public class ParkingLotTest {
     public void givenVehicleToPark_WhenDriverIsHandicap_ShouldParkVehicleAtNearestSpot() {
 
         Vehicle vehicle2 = new Vehicle();
-        parkingAttendant.park(vehicle, DriverType.NORMAL);
-
-        parkingAttendant.park(new Vehicle("Blue"), DriverType.HANDICAP);
-        parkingAttendant.unPark(vehicle);
+        parkingAttendant.park(vehicle2, DriverType.NORMAL);
+        parkingAttendant.unPark(vehicle2);
 
         parkingAttendant.park(vehicle, DriverType.NORMAL);
         parkingAttendant.park(vehicle2, DriverType.HANDICAP);
+
+        parkingAttendant.park(new Vehicle("Blue"), DriverType.HANDICAP);
+
         int vehicleParkedLocation = parkingAttendant.getVehicleByLocation(vehicle2);
         Assert.assertEquals(0, vehicleParkedLocation);
 
@@ -273,7 +295,12 @@ public class ParkingLotTest {
     @Test
     public void givenVehicles_WhenVehicleShouldParkedAccordinglyType_ShouldReturnExpectedSlotNumbers() {
         int expectedSlots = 0;
-
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         Vehicle vehicle2 = new Vehicle();
         Vehicle vehicle3 = new Vehicle();
         Vehicle vehicle4 = new Vehicle();
@@ -295,6 +322,7 @@ public class ParkingLotTest {
         Vehicle vehicle3 = new Vehicle("White");
 
         ArrayList<Integer> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add(0);
         expectedVehicles.add(1);
         expectedVehicles.add(2);
 
@@ -331,6 +359,12 @@ public class ParkingLotTest {
     public void givenVehicleDetails_WhenFindingVehicleAccordinglyModelNumberAndColor_ShouldReturnCorrectVehicle() {
 
         ArrayList<String> expectedVehicles = new ArrayList<>();
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         expectedVehicles.add(1 + " " + "MH-1509");
         Vehicle vehicle1 = new Vehicle("black", "MH-1618", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-1218", "BMW");
@@ -349,7 +383,12 @@ public class ParkingLotTest {
 
     @Test
     public void givenAnotherVehicleDetails_WhenFindingVehicleAccordinglyModelNumberAndColor_ShouldReturnException() {
-
+        parkingAttendant = new ParkingLotSystem();
+        parkingLot1 = new ParkingLots(3);
+        parkingLot.initializeParkingLot();
+        parkingLot1.initializeParkingLot();
+        parkingAttendant.addMultipleLots(parkingLot);
+        parkingAttendant.addMultipleLots(parkingLot1);
         ArrayList<String> expectedVehicles = new ArrayList<>();
         expectedVehicles.add(1 + " " + "MH-1509");
         try {
@@ -411,19 +450,52 @@ public class ParkingLotTest {
 
         ArrayList<Integer> expectedVehicles = new ArrayList<>();
         expectedVehicles.add(1);
-        expectedVehicles.add(2);
         expectedVehicles.add(3);
         expectedVehicles.add(4);
         Vehicle vehicle1 = new Vehicle("black", "MH-1218", "benz");
         Vehicle vehicle2 = new Vehicle("blue", "MH-1216", "BMW");
         Vehicle vehicle3 = new Vehicle("white", "MH-1618", "toyota");
-        Vehicle vehicle4 = new Vehicle("white", "MH-1618", "toyota");
         parkingAttendant.park(vehicle1, DriverType.NORMAL);
         parkingAttendant.park(vehicle2, DriverType.NORMAL);
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
-        parkingAttendant.park(vehicle4, DriverType.NORMAL);
 
         int filteredVehicleDetailsList = parkingAttendant.getVehicleParkedInLotsInLast30Minutes().size();
         assertEquals(expectedVehicles.size(), filteredVehicleDetailsList);
     }
+
+    //uc16
+    @Test
+    public void givenParkingLots_WhenFindVehiclesAccordinglySmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
+
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 MH-19 toyota white");
+        expectedVehicles.add("1 MH-12 BMW blue");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+        parkingAttendant.park(vehicle1, DriverType.HANDICAP);
+        parkingAttendant.park(vehicle2, DriverType.HANDICAP);
+        parkingAttendant.park(vehicle3, DriverType.NORMAL);
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingAttendant.findVehicleByVehicleTypeAndDriverType(ParkingLotSystem.VehicleType.SMALL, DriverType.HANDICAP);
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }
+
+    /*//uc17
+    @Test
+    public void givenParkingLots_WhenFindParkedVehicles_ShouldReturnVehiclesDetails() {
+
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 MH-19 toyota white");
+        expectedVehicles.add("1 MH-12 BMW blue");
+        expectedVehicles.add("2 MH-12-V123 toyota blue");
+
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+        parkingAttendant.park(vehicle1, DriverType.HANDICAP);
+        parkingAttendant.park(vehicle2, DriverType.HANDICAP);
+        parkingAttendant.park(vehicle3, DriverType.NORMAL);
+        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingAttendant.findAllParkedVehicles();
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
+    }*/
 }

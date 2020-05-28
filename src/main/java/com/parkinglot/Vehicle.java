@@ -8,14 +8,15 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String color) {
-        this.color = color;
-    }
+
 
     public Vehicle(String color, String numberPlate, String carName) {
         this.color = color;
         this.numberPlate = numberPlate;
         this.carName = carName;
+    }
+    public Vehicle(String color) {
+        this.color = color;
     }
 
     public String getColor() {

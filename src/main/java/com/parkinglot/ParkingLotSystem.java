@@ -13,30 +13,12 @@ public class ParkingLotSystem {
     List<ParkingLots> parkingLotList;
     ParkingLots parkingLot;
 
-    public ArrayList<String> getVehicleByMultipleValue(String color, String carName) {
+   /* public ArrayList<String> findAllParkedVehicles() {
         for (ParkingLots lot : parkingLotList)
-            return lot.getMultipleFields(color, carName);
+            return lot.findAllParkedVehicles();
         throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
-
-    public ArrayList<Integer> findVehicleByCarName(String carName) {
-        for (ParkingLots lot : parkingLotList)
-            return lot.getVehicleByCarName(carName);
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
-
-    public ArrayList<Integer> getVehicleParkedInLotsInLast30Minutes() {
-        ArrayList collect = new ArrayList();
-        for (ParkingLots lot : this.parkingLotList) {
-            if (parkingLotList.contains(lot)) {
-                parkingLot.getVehicleParkedInLast30Mins();
-            }
-            collect.add(parkingLot.getVehicleParkedInLast30Mins());
-            return collect;
-        }
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
-
+*/
     public enum VehicleType {
         LARGE, SMALL;
     }
@@ -112,5 +94,33 @@ public class ParkingLotSystem {
             ParkingLots lot = parkingLotList.get(0);
             lot.parkVehicle(vehicle, driverType);
         }
+    }
+
+    public ArrayList<String> getVehicleByMultipleValue(String color, String carName) {
+        for (ParkingLots lot : parkingLotList)
+            return lot.getMultipleFields(color, carName);
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
+    public ArrayList<Integer> findVehicleByCarName(String carName) {
+        for (ParkingLots lot : parkingLotList)
+            return lot.getVehicleByCarName(carName);
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
+    public ArrayList<Integer> getVehicleParkedInLotsInLast30Minutes() {
+        for (ParkingLots parkingLot : this.parkingLotList)
+            return parkingLot.getVehicleParkedInLast30Mins();
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
+    }
+
+    public ArrayList<String> findVehicleByVehicleTypeAndDriverType(VehicleType vehicleType, DriverType driverType) {
+        int i = 0;
+        for (ParkingLots lot : parkingLotList) {
+            i++;
+            System.out.println("hello " + i);
+            return lot.getByFieldByVehicleTypeAndDriverType(vehicleType, driverType);
+        }
+        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 }
