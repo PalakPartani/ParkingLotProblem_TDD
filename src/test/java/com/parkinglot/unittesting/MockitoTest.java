@@ -1,6 +1,6 @@
 package com.parkinglot.unittesting;
 
-import com.parkinglot.*;
+import com.parkinglot.ParkingLots;
 import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverType;
 import com.parkinglot.exception.ParkingLotException;
@@ -65,4 +65,5 @@ public class MockitoTest {
         when(observers.isCapacityFull()).thenReturn(true);
         Assert.assertTrue(observers.isCapacityFull());
     }
+
 }

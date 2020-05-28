@@ -39,11 +39,15 @@ public class ParkingLotSystem {
 
     public ParkingLots getLotWithMoreEmptySlots() {
         ParkingLots parkingLots;
+        try{
         parkingLots = parkingLotList.stream()
                 .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
                 .filter(list -> list.getEmptySlots().size() != 0)
                 .findFirst()
                 .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
+        } catch (ParkingLotException e) {
+            parkingLots = parkingLotList.get(0);
+        }
         return parkingLots;
 
     }
