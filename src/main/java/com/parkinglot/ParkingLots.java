@@ -6,15 +6,20 @@
  *******************************************/
 package com.parkinglot;
 
+import com.parkinglot.dao.ParkingSlot;
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverType;
 import com.parkinglot.exception.ParkingLotException;
+import com.parkinglot.observer.ParkingObservers;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static com.parkinglot.predicate.PredicateFilter.initializePredicate;
 
 public class ParkingLots {
     public int capacity;
@@ -130,61 +135,14 @@ public class ParkingLots {
         throw new ParkingLotException("Sorry! vehicle not found", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 
-    public ArrayList<Integer> getCarByColorName(String color) {
-        ArrayList<Integer> checklist = new ArrayList<>();
-        IntStream.range(0, vehiclesList.size())
-                .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), color))
-                .forEach(checklist::add);
-        return checklist;
-    }
+//Predicates
 
-    public ArrayList<String> getMultipleFields(String color, String carName) {
+    public List<String> filterByPredicate(IntPredicate intPredicate) {
         ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
+        initializePredicate(vehiclesList);
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getColor(), color))
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
-                .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).vehicle.getNumberPlate()))
-                .forEach(filteredVehicleDetailsList::add);
-        return filteredVehicleDetailsList;
-    }
-
-    public ArrayList<Integer> getVehicleByCarName(String carName) {
-        ArrayList<Integer> checklist = new ArrayList<>();
-        IntStream.range(0, vehiclesList.size())
-                .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).vehicle.getCarName(), carName))
-                .forEach(checklist::add);
-        return checklist;
-
-    }
-
-    public ArrayList<Integer> getVehicleParkedInLast30Mins() {
-        long toMinutes = LocalDateTime.now().getMinute();
-        ArrayList<Integer> filteredVehicleDetailsList = new ArrayList<>();
-        IntStream.range(0, vehiclesList.size())
-                .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> toMinutes - vehiclesList.get(slot).parkedTime <= 30)
-                .forEach(filteredVehicleDetailsList::add);
-        return filteredVehicleDetailsList;
-    }
-
-    public ArrayList<String> getByFieldByVehicleTypeAndDriverType(ParkingLotSystem.VehicleType vehicleType, DriverType driverType) {
-        ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
-        IntStream.range(0, vehiclesList.size())
-                .filter(slot -> vehiclesList.get(slot) != null)
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).getVehicleType(), vehicleType))
-                .filter(slot -> Objects.equals(vehiclesList.get(slot).getDriverType(), driverType))
-                .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).getVehicle().getNumberPlate() + " " + vehiclesList.get(slot).getVehicle().getCarName() + " " + vehiclesList.get(slot).getVehicle().getColor()))
-                .forEach(filteredVehicleDetailsList::add);
-        return filteredVehicleDetailsList;
-    }
-
-    public ArrayList<String> findAllParkedVehicles() {
-        ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
-        IntStream.range(0, vehiclesList.size())
-                .filter(slot -> vehiclesList.get(slot) != null)
+                .filter(intPredicate)
                 .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).getVehicle().getNumberPlate() + " " + vehiclesList.get(slot).getVehicle().getCarName() + " " + vehiclesList.get(slot).getVehicle().getColor()))
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;

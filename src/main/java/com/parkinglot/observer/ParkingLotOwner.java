@@ -1,4 +1,4 @@
-package com.parkinglot;
+package com.parkinglot.observer;
 
 public class ParkingLotOwner implements ParkingObservers {
     private boolean isFullcapacity;

@@ -1,8 +1,12 @@
 package com.parkinglot.unittesting;
 
 import com.parkinglot.*;
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverType;
 import com.parkinglot.exception.ParkingLotException;
+import com.parkinglot.observer.AirportSecurity;
+import com.parkinglot.observer.ParkingLotOwner;
+import com.parkinglot.observer.ParkingObservers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;

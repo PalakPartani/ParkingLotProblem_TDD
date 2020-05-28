@@ -2,7 +2,7 @@ package com.parkinglot.unittesting;
 
 import com.parkinglot.ParkingLotSystem;
 import com.parkinglot.ParkingLots;
-import com.parkinglot.Vehicle;
+import com.parkinglot.dao.Vehicle;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.Mock;

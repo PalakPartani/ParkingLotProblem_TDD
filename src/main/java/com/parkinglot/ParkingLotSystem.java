@@ -1,5 +1,6 @@
 package com.parkinglot;
 
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverType;
 import com.parkinglot.exception.ParkingLotException;
 
@@ -7,17 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
 public class ParkingLotSystem {
     List<ParkingLots> parkingLotList;
     ParkingLots parkingLot;
 
-    public ArrayList<String> findAllParkedVehicles() {
-        for (ParkingLots lot : parkingLotList)
-            return lot.findAllParkedVehicles();
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
     public enum VehicleType {
         LARGE, SMALL;
     }
@@ -42,15 +39,11 @@ public class ParkingLotSystem {
 
     public ParkingLots getLotWithMoreEmptySlots() {
         ParkingLots parkingLots;
-        try {
-            parkingLots = parkingLotList.stream()
-                    .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
-                    .filter(list -> list.getEmptySlots().size() != 0)
-                    .findFirst()
-                    .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
-        } catch (ParkingLotException e) {
-            parkingLots = parkingLotList.get(0);
-        }
+        parkingLots = parkingLotList.stream()
+                .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
+                .filter(list -> list.getEmptySlots().size() != 0)
+                .findFirst()
+                .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
         return parkingLots;
 
     }
@@ -63,24 +56,20 @@ public class ParkingLotSystem {
     }
 
     public int getVehicleByLocation(Vehicle vehicle) {
-        for (ParkingLots parkingLots : this.parkingLotList)
-            if (parkingLots.isVehicleParked(vehicle))
-                return parkingLots.getVehicleLocationOnSlot(vehicle);
-        throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
+        return parkingLotList.stream().
+                filter(lots -> lots.getVehicleLocationOnSlot(vehicle) != -1)
+                .map(lots -> lots.getVehicleLocationOnSlot(vehicle))
+                .collect(Collectors.toList()).get(0);
 
-    public ArrayList<Integer> getVehicleByColor(String color) {
-        for (ParkingLots lot : parkingLotList)
-            return lot.getCarByColorName(color);
-        throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 
     public boolean unPark(Vehicle vehicle) {
-        for (ParkingLots parkingLots : this.parkingLotList) {
-            return parkingLots.unParkVehicle(vehicle);
-        }
+        return parkingLotList.stream().
+                filter(lots -> lots.unParkVehicle(vehicle))
+                .map(slot -> true)
+                .collect(Collectors.toList())
+                .get(0);
 
-        throw new ParkingLotException("Vehicle is not present !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 
     public void parkAccToVehicle(Vehicle vehicle, DriverType driverType, VehicleType vehicleTypeTypes) {
@@ -95,31 +84,12 @@ public class ParkingLotSystem {
         }
     }
 
-    public ArrayList<String> getVehicleByMultipleValue(String color, String carName) {
-        for (ParkingLots lot : parkingLotList)
-            return lot.getMultipleFields(color, carName);
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
+    //predicate
+    public List<String> filterByPredicate(IntPredicate intPredicate) {
+        return parkingLotList.stream()
+                .map(lots -> lots.filterByPredicate(intPredicate))
+                .collect(Collectors.toList())
+                .get(0);
 
-    public ArrayList<Integer> findVehicleByCarName(String carName) {
-        for (ParkingLots lot : parkingLotList)
-            return lot.getVehicleByCarName(carName);
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
-
-    public ArrayList<Integer> getVehicleParkedInLotsInLast30Minutes() {
-        for (ParkingLots parkingLot : this.parkingLotList)
-            return parkingLot.getVehicleParkedInLast30Mins();
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
-    }
-
-    public ArrayList<String> findVehicleByVehicleTypeAndDriverType(VehicleType vehicleType, DriverType driverType) {
-        int i = 0;
-        for (ParkingLots lot : parkingLotList) {
-            i++;
-            System.out.println("hello " + i);
-            return lot.getByFieldByVehicleTypeAndDriverType(vehicleType, driverType);
-        }
-        throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
 }

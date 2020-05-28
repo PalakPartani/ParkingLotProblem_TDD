@@ -1,4 +1,4 @@
-package com.parkinglot;
+package com.parkinglot.observer;
 
 public class AirportSecurity implements ParkingObservers {
     private boolean isFullcapacity;

@@ -1,5 +1,6 @@
-package com.parkinglot;
+package com.parkinglot.dao;
 
+import com.parkinglot.ParkingLotSystem;
 import com.parkinglot.enums.DriverType;
 
 import java.time.LocalDateTime;

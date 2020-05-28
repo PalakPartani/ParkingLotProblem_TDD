@@ -1,7 +1,10 @@
 package com.parkinglot;
 
+import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverType;
 import com.parkinglot.exception.ParkingLotException;
+import com.parkinglot.observer.AirportSecurity;
+import com.parkinglot.observer.ParkingLotOwner;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +12,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.parkinglot.predicate.PredicateFilter.getPredicate;
 import static org.junit.Assert.assertEquals;
 
 public class ParkingLotTest {
@@ -53,17 +57,6 @@ public class ParkingLotTest {
         parkingAttendant.park(vehicle, DriverType.NORMAL);
         boolean isParked = parkingAttendant.unPark(vehicle);
         Assert.assertTrue(isParked);
-    }
-
-    @Test
-    public void givenAnotherVehicle_WhenUnParked_ShouldReturnFalse() {
-        try {
-            Vehicle vehicle2 = new Vehicle("Black");
-            parkingAttendant.park(vehicle2, DriverType.NORMAL);
-            boolean isUnParked = parkingAttendant.unPark(vehicle);
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Vehicle is not present !", e.getMessage());
-        }
     }
 
     //UC3
@@ -123,6 +116,17 @@ public class ParkingLotTest {
         Assert.assertFalse(capacityFull);
     }
 
+    @Test
+    public void givenWhenLotIsEmpty_ShouldInformSecurity() {
+        AirportSecurity airportSecurity = new AirportSecurity();
+        parkingLot.register(airportSecurity);
+        parkingLot.parkVehicle(vehicle, DriverType.NORMAL);
+        parkingLot.parkVehicle(new Vehicle(), DriverType.NORMAL);
+        parkingLot.unParkVehicle(vehicle);
+        boolean capacityFull = airportSecurity.isCapacityFull();
+        Assert.assertFalse(capacityFull);
+    }
+
     //uc6
 
     @Test
@@ -173,6 +177,7 @@ public class ParkingLotTest {
         Assert.assertEquals(vehicleLocation, 2);
     }
 
+
     @Test
     public void givenVehicle_WhenNotFound_ShouldThrowException() {
         parkingLot.parkVehicle(vehicle, DriverType.NORMAL);
@@ -193,6 +198,15 @@ public class ParkingLotTest {
         parkingLot.parkVehicle(vehicle, DriverType.NORMAL);
         int parkMinute = parkingLot.getTime();
         Assert.assertEquals(owner.getParkingTime(), parkMinute);
+    }
+
+    @Test
+    public void givenVehicleParked_WhenTimeIsSet_ShouldReturnParkingTimeToSecurity() {
+        AirportSecurity airportSecurity = new AirportSecurity();
+        parkingLot.register(airportSecurity);
+        parkingLot.parkVehicle(vehicle, DriverType.NORMAL);
+        int parkMinute = parkingLot.getTime();
+        Assert.assertEquals(airportSecurity.getParkingTime(), parkMinute);
     }
 
     //uc9
@@ -316,167 +330,83 @@ public class ParkingLotTest {
 
     //uc12
     @Test
-    public void givenVehicleColor_WhenFindAccordinglyColor_ShouldReturnCorrectVehicleSlotNumber() {
-
-        Vehicle vehicle2 = new Vehicle("White");
-        Vehicle vehicle3 = new Vehicle("White");
-
-        ArrayList<Integer> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(0);
-        expectedVehicles.add(1);
-        expectedVehicles.add(2);
-
+    public void givenVehicleColour_WhenFindVehicleAccordinglyColour_ShouldReturnVehicleSlotNumber() {
+        Vehicle vehicle2 = new Vehicle("White", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("White", "MH-12-V123", "toyota");
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 null null White");
+        expectedVehicles.add("1 MH-12-V123 toyota White");
+        expectedVehicles.add("2 MH-12 BMW White");
         parkingAttendant.park(vehicle2, DriverType.NORMAL);
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
         parkingAttendant.park(vehicle, DriverType.NORMAL);
-
-        ArrayList<Integer> filteredVehicleDetailsList = parkingAttendant.getVehicleByColor("White");
-        Assert.assertEquals(expectedVehicles, filteredVehicleDetailsList);
-    }
-
-    @Test
-    public void givenAnotherVehicleColor_WhenFindAccordinglyColor_ShouldReturnException() {
-
-        Vehicle vehicle2 = new Vehicle("White");
-        Vehicle vehicle3 = new Vehicle("White");
-
-        ArrayList<Integer> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(1);
-        expectedVehicles.add(2);
-        try {
-            parkingAttendant.park(vehicle2, DriverType.NORMAL);
-            parkingAttendant.park(vehicle3, DriverType.NORMAL);
-            parkingAttendant.park(vehicle, DriverType.NORMAL);
-
-            parkingAttendant.getVehicleByColor("Green");
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Vehicle not found !", e.getMessage());
-        }
+        List<String> vehicleDetailsListBasedOnFilters = parkingAttendant.filterByPredicate(getPredicate("color", "White"));
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
     //uc13
     @Test
-    public void givenVehicleDetails_WhenFindingVehicleAccordinglyModelNumberAndColor_ShouldReturnCorrectVehicle() {
-
-        ArrayList<String> expectedVehicles = new ArrayList<>();
-        parkingAttendant = new ParkingLotSystem();
-        parkingLot1 = new ParkingLots(3);
-        parkingLot.initializeParkingLot();
-        parkingLot1.initializeParkingLot();
-        parkingAttendant.addMultipleLots(parkingLot);
-        parkingAttendant.addMultipleLots(parkingLot1);
-        expectedVehicles.add(1 + " " + "MH-1509");
-        Vehicle vehicle1 = new Vehicle("black", "MH-1618", "toyota");
-        Vehicle vehicle2 = new Vehicle("blue", "MH-1218", "BMW");
-        Vehicle vehicle3 = new Vehicle("blue", "MH-1509", "toyota");
-        Vehicle vehicle4 = new Vehicle("white", "MH-0510", "BMW");
-
+    public void givenVehicleModelNumberAndColor_WhenFindVehicleAccordinglyModelNumberAndColor_ShouldReturnFilteredVehicleInformation
+    () {
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 MH-12-V123 toyota blue");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+        // Vehicle vehicle4 = new Vehicle("white", "xy123", "BMW");
         parkingAttendant.park(vehicle1, DriverType.NORMAL);
         parkingAttendant.park(vehicle2, DriverType.NORMAL);
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
-        parkingAttendant.park(vehicle4, DriverType.NORMAL);
-        parkingAttendant.park(vehicle, DriverType.NORMAL);
 
-        ArrayList<String> filteredVehicleDetailsList = parkingAttendant.getVehicleByMultipleValue("blue", "toyota");
-        assertEquals(expectedVehicles, filteredVehicleDetailsList);
-    }
-
-    @Test
-    public void givenAnotherVehicleDetails_WhenFindingVehicleAccordinglyModelNumberAndColor_ShouldReturnException() {
-        parkingAttendant = new ParkingLotSystem();
-        parkingLot1 = new ParkingLots(3);
-        parkingLot.initializeParkingLot();
-        parkingLot1.initializeParkingLot();
-        parkingAttendant.addMultipleLots(parkingLot);
-        parkingAttendant.addMultipleLots(parkingLot1);
-        ArrayList<String> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(1 + " " + "MH-1509");
-        try {
-            Vehicle vehicle1 = new Vehicle("black", "MH-1618", "toyota");
-            Vehicle vehicle2 = new Vehicle("blue", "MH-1218", "BMW");
-            Vehicle vehicle3 = new Vehicle("blue", "MH-1509", "toyota");
-            Vehicle vehicle4 = new Vehicle("white", "MH-0510", "BMW");
-
-            parkingAttendant.park(vehicle1, DriverType.NORMAL);
-            parkingAttendant.park(vehicle2, DriverType.NORMAL);
-            parkingAttendant.park(vehicle3, DriverType.NORMAL);
-            parkingAttendant.park(vehicle4, DriverType.NORMAL);
-            parkingAttendant.park(vehicle, DriverType.NORMAL);
-
-            parkingAttendant.getVehicleByMultipleValue("blue", "toyota");
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Vehicle not found !", e.getMessage());
-        }
+        List<String> vehicleDetailsListBasedOnFilters = parkingAttendant.filterByPredicate(getPredicate("carName_color", "toyota", "blue"));
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
     //uc14
     @Test
-    public void givenCarName_WhenFindVehicleOfCarName_ShouldReturnVehicleSlotNumber() {
-        ArrayList<Integer> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(2);
+    public void givenVehicle_WhenFindVehicleColor_ShouldReturnVehicleSlotNumber() {
 
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 MH-12 BMW blue");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
         Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
-
-        parkingAttendant.park(vehicle2, DriverType.NORMAL);
         parkingAttendant.park(vehicle1, DriverType.NORMAL);
+        parkingAttendant.park(vehicle2, DriverType.HANDICAP);
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
-        ArrayList<Integer> vehicleDetailsListBasedOnFilters = parkingAttendant.findVehicleByCarName("BMW");
+        List<String> vehicleDetailsListBasedOnFilters = parkingAttendant.filterByPredicate(getPredicate("carName", "BMW"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
+    //uc15
     @Test
-    public void givenAnotherCarName_WhenFindVehicleOfCarName_ShouldReturnException() {
-        ArrayList<Integer> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(2);
-        try {
-            Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
-            Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
-            Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
-
-            parkingAttendant.park(vehicle2, DriverType.NORMAL);
-            parkingAttendant.park(vehicle1, DriverType.NORMAL);
-            parkingAttendant.park(vehicle3, DriverType.NORMAL);
-            parkingAttendant.findVehicleByCarName("Benz");
-        } catch (ParkingLotException e) {
-            Assert.assertEquals("Vehicle not found !", e.getMessage());
-        }
-    }
-
-    //UC15
-    @Test
-    public void givenVehiclesParked_WhenFindVehicleParkedInLast30Minutes_ShouldReturnVehicleSlotNumber() {
-
-        ArrayList<Integer> expectedVehicles = new ArrayList<>();
-        expectedVehicles.add(1);
-        expectedVehicles.add(3);
-        expectedVehicles.add(4);
-        Vehicle vehicle1 = new Vehicle("black", "MH-1218", "benz");
-        Vehicle vehicle2 = new Vehicle("blue", "MH-1216", "BMW");
-        Vehicle vehicle3 = new Vehicle("white", "MH-1618", "toyota");
+    public void givenVehicles_WhenFindVehiclesParkedIn30Minutes_ShouldReturnVehicleSlotNumber() {
+        List<String> expectedVehicles = new ArrayList<>();
+        expectedVehicles.add("0 MH-12 BMW blue");
+        expectedVehicles.add("1 MH-12-V123 toyota blue");
+        expectedVehicles.add("2 MH-19 toyota white");
+        Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
+        Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
+        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
         parkingAttendant.park(vehicle1, DriverType.NORMAL);
-        parkingAttendant.park(vehicle2, DriverType.NORMAL);
+        parkingAttendant.park(vehicle2, DriverType.HANDICAP);
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
-
-        int filteredVehicleDetailsList = parkingAttendant.getVehicleParkedInLotsInLast30Minutes().size();
-        assertEquals(expectedVehicles.size(), filteredVehicleDetailsList);
+        List<String> vehicleDetailsListBasedOnFilters = parkingAttendant.filterByPredicate(getPredicate("time", "30"));
+        assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
     //uc16
     @Test
-    public void givenParkingLots_WhenFindVehiclesAccordinglySmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
-
+    public void givenVehicle_WhenFindVehiclesSmallVehicleAndHandicapDriverType_ShouldReturnVehicleDetails() {
         List<String> expectedVehicles = new ArrayList<>();
         expectedVehicles.add("0 MH-19 toyota white");
         expectedVehicles.add("1 MH-12 BMW blue");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
-        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+
         parkingAttendant.park(vehicle1, DriverType.HANDICAP);
         parkingAttendant.park(vehicle2, DriverType.HANDICAP);
-        parkingAttendant.park(vehicle3, DriverType.NORMAL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingAttendant.findVehicleByVehicleTypeAndDriverType(ParkingLotSystem.VehicleType.SMALL, DriverType.HANDICAP);
+        List<String> vehicleDetailsListBasedOnFilters = parkingAttendant.filterByPredicate(getPredicate("vehicle&driverType", "SMALL", "HANDICAP"));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
@@ -487,15 +417,14 @@ public class ParkingLotTest {
         List<String> expectedVehicles = new ArrayList<>();
         expectedVehicles.add("0 MH-19 toyota white");
         expectedVehicles.add("1 MH-12 BMW blue");
-        expectedVehicles.add("2 MH-12-V123 toyota blue");
-
+        expectedVehicles.add("2 MH-18 toyota blk");
         Vehicle vehicle1 = new Vehicle("white", "MH-19", "toyota");
         Vehicle vehicle2 = new Vehicle("blue", "MH-12", "BMW");
-        Vehicle vehicle3 = new Vehicle("blue", "MH-12-V123", "toyota");
+        Vehicle vehicle3 = new Vehicle("blk", "MH-18", "toyota");
         parkingAttendant.park(vehicle1, DriverType.HANDICAP);
         parkingAttendant.park(vehicle2, DriverType.HANDICAP);
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
-        ArrayList<String> vehicleDetailsListBasedOnFilters = parkingAttendant.findAllParkedVehicles();
+        List<String> vehicleDetailsListBasedOnFilters = parkingAttendant.filterByPredicate((getPredicate("default")));
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 }
