@@ -181,12 +181,12 @@ public class ParkingLots {
         return filteredVehicleDetailsList;
     }
 
-   /* public ArrayList<String> findAllParkedVehicles() {
+    public ArrayList<String> findAllParkedVehicles() {
         ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
         IntStream.range(0, vehiclesList.size())
                 .filter(slot -> vehiclesList.get(slot) != null)
                 .mapToObj(slot -> (slot + " " + vehiclesList.get(slot).getVehicle().getNumberPlate() + " " + vehiclesList.get(slot).getVehicle().getCarName() + " " + vehiclesList.get(slot).getVehicle().getColor()))
                 .forEach(filteredVehicleDetailsList::add);
         return filteredVehicleDetailsList;
-    }*/
+    }
 }

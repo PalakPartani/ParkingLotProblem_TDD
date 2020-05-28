@@ -13,12 +13,11 @@ public class ParkingLotSystem {
     List<ParkingLots> parkingLotList;
     ParkingLots parkingLot;
 
-   /* public ArrayList<String> findAllParkedVehicles() {
+    public ArrayList<String> findAllParkedVehicles() {
         for (ParkingLots lot : parkingLotList)
             return lot.findAllParkedVehicles();
         throw new ParkingLotException("Vehicle not found !", ParkingLotException.ExceptionType.NOT_FOUND);
     }
-*/
     public enum VehicleType {
         LARGE, SMALL;
     }

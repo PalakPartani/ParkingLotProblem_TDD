@@ -480,7 +480,7 @@ public class ParkingLotTest {
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
     }
 
-    /*//uc17
+    //uc17
     @Test
     public void givenParkingLots_WhenFindParkedVehicles_ShouldReturnVehiclesDetails() {
 
@@ -497,5 +497,5 @@ public class ParkingLotTest {
         parkingAttendant.park(vehicle3, DriverType.NORMAL);
         ArrayList<String> vehicleDetailsListBasedOnFilters = parkingAttendant.findAllParkedVehicles();
         assertEquals(expectedVehicles, vehicleDetailsListBasedOnFilters);
-    }*/
+    }
 }
