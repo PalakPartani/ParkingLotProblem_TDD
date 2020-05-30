@@ -26,8 +26,8 @@ public class PredicateFilter {
             case "carName":
                 return slot -> Objects.equals(vehiclesList.get(slot).getVehicle().getCarName(), param[0]);
             case "time":
-                long currentTimeInMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
-                return slot -> currentTimeInMinutes - vehiclesList.get(slot).getParkedTime() <= Integer.parseInt(param[0]);
+                long currentTime = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
+                return slot -> currentTime - vehiclesList.get(slot).getParkedTime() <= Integer.parseInt(param[0]);
             case "vehicle&driverType":
                 return slot -> Objects.equals(vehiclesList.get(slot).getVehicleType(), ParkingLotSystem.VehicleType.valueOf(param[0])) &&
                         Objects.equals(vehiclesList.get(slot).getDriverType(), DriverType.valueOf(param[1]));

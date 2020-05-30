@@ -20,7 +20,6 @@ public class ParkingSlot {
     public ParkingSlot(Vehicle vehicle, ParkingLotSystem.VehicleType vehicleType, DriverType driverType) {
         this.vehicle = vehicle;
         this.parkedTime = (int) TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis());
-        this.driverType = DriverType.HANDICAP;
         this.vehicleType = vehicleType;
         this.driverType=driverType;
     }

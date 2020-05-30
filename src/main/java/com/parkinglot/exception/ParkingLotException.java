@@ -10,5 +10,5 @@ public class ParkingLotException extends RuntimeException {
         SIZE_FULL, PARKED,NOT_FOUND;
     }
 
-    ExceptionType type;
+   public ExceptionType type;
 }

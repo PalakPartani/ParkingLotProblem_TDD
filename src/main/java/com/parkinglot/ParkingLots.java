@@ -23,7 +23,6 @@ import static com.parkinglot.predicate.PredicateFilter.initializePredicate;
 
 public class ParkingLots {
     public int capacity;
-    private ParkingSlot parkingSlot;
     List<ParkingObservers> observersList;
     public List<ParkingSlot> vehiclesList;
 
@@ -98,7 +97,8 @@ public class ParkingLots {
     }
 
     public int getTime() {
-        observersList.get(0).setParkingTime(LocalDateTime.now().getMinute());
+        observersList.get(0)
+                .setParkingTime(LocalDateTime.now().getMinute());
         return LocalDateTime.now().getMinute();
     }
 
@@ -137,6 +137,10 @@ public class ParkingLots {
 
 //Predicates
 
+    /**
+     * @param intPredicate filter
+     * @return list
+     */
     public List<String> filterByPredicate(IntPredicate intPredicate) {
         ArrayList<String> filteredVehicleDetailsList = new ArrayList<>();
         initializePredicate(vehiclesList);

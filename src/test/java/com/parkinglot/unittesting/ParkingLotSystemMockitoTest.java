@@ -28,7 +28,7 @@ public class ParkingLotSystemMockitoTest {
     public void setup() {
         vehicle = new Vehicle();
         parkingLotSystem = new ParkingLotSystem();
-        parkingLotSystem.addMultipleLots(parkingLots);
+        parkingLotSystem.addLot(parkingLots);
     }
 
     @Test
@@ -47,7 +47,6 @@ public class ParkingLotSystemMockitoTest {
 
     @Test
     public void givenvCheckIfVehicleParked_WhenSetParked_ShouldReturnTrue() {
-        parkingLotSystem.park(vehicle, DriverType.NORMAL);
         when(parkingLots.isVehicleParked(vehicle)).thenReturn(true);
         boolean check = parkingLotSystem.isVehicleParked(vehicle);
         assertTrue(check);

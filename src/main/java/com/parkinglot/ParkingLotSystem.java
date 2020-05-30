@@ -1,4 +1,7 @@
 package com.parkinglot;
+/**
+ * * purpose:Handling multiple parking lots.
+ */
 
 import com.parkinglot.dao.Vehicle;
 import com.parkinglot.enums.DriverType;
@@ -24,7 +27,7 @@ public class ParkingLotSystem {
         parkingLot = new ParkingLots(3);
     }
 
-    public void addMultipleLots(ParkingLots parkingLot) {
+    public void addLot(ParkingLots parkingLot) {
         this.parkingLotList.add(parkingLot);
     }
 
@@ -39,12 +42,12 @@ public class ParkingLotSystem {
 
     public ParkingLots getLotWithMoreEmptySlots() {
         ParkingLots parkingLots;
-        try{
-        parkingLots = parkingLotList.stream()
-                .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
-                .filter(list -> list.getEmptySlots().size() != 0)
-                .findFirst()
-                .orElseThrow(() -> new ParkingLotException("ParkingLot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
+        try {
+            parkingLots = parkingLotList.stream()
+                    .sorted(Comparator.comparing(list -> list.getEmptySlots().size(), Comparator.reverseOrder()))
+                    .filter(list -> list.getEmptySlots().size() != 0)
+                    .findFirst()
+                    .orElseThrow(() -> new ParkingLotException("Parking Lot is Full !", ParkingLotException.ExceptionType.SIZE_FULL));
         } catch (ParkingLotException e) {
             parkingLots = parkingLotList.get(0);
         }
@@ -73,7 +76,6 @@ public class ParkingLotSystem {
                 .map(slot -> true)
                 .collect(Collectors.toList())
                 .get(0);
-
     }
 
     public void parkAccToVehicle(Vehicle vehicle, DriverType driverType, VehicleType vehicleTypeTypes) {
@@ -89,11 +91,15 @@ public class ParkingLotSystem {
     }
 
     //predicate
+
+    /**
+     * @param intPredicate get predicate
+     * @return
+     */
     public List<String> filterByPredicate(IntPredicate intPredicate) {
         return parkingLotList.stream()
                 .map(lots -> lots.filterByPredicate(intPredicate))
                 .collect(Collectors.toList())
                 .get(0);
-
     }
 }
